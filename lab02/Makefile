@@ -24,6 +24,7 @@ VECTOR_PROG=vector-test
 BINARIES=$(VECTOR_PROG) $(BIT_OPS_PROG) $(LFSR_PROG)
 
 all: $(BINARIES)
+.PHONY : all
 
 $(BIT_OPS_PROG): $(BIT_OPS_OBJS)
 	$(CC) $(CFLAGS) -g -o $(BIT_OPS_PROG) $(BIT_OPS_OBJS) $(LDFLAGS)
@@ -43,8 +44,12 @@ test_bit_ops.c: bit_ops.h
 vector-memcheck: $(VECTOR_PROG)
 	$(MEMCHECK) ./$(VECTOR_PROG)
 
+.PHONY : clean
 clean:
 	-rm -rf core *.o *~ "#"*"#" Makefile.bak $(BINARIES) *.dSYM
 
 vector.c: vector.h
 vector-test.c: vector.h
+
+vector-test: vector-test.o vector.o
+	$(CC) -o vector-test vector.o vector-test.o $(CFLAGS)
